@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    buildToolsVersion "25.0.2"
 
     defaultConfig {
         minSdkVersion 19
@@ -30,7 +30,7 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-gson:2.2.0'
 
     // Dynamic Call Adapter
-    compile 'com.github.IVIanuu:DynamicCallAdapter:5b553631ea'
+    compile 'com.github.IVIanuu:DynamicCallAdapter:a04f6cf'
 
     // Rx Java
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
