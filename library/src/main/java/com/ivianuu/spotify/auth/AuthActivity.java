@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -16,44 +19,41 @@ import com.ivianuu.spotify.Spotify;
 import com.ivianuu.spotify.api.models.AuthenticationResponse;
 
 import io.reactivex.functions.Consumer;
+import io.reactivex.observers.DisposableObserver;
 
 public class AuthActivity extends Activity {
-
-    private WebView mWebView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auth);
 
-        initWebView();
-    }
+        Log.d("testtt", "on create auth");
 
-    private void initWebView() {
-        mWebView = (WebView) findViewById(R.id.web_view);
+        WebView webView = (WebView) findViewById(R.id.web_view);
 
-        WebSettings webSettings = mWebView.getSettings();
+        WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setSaveFormData(false);
         webSettings.setSavePassword(false);
 
-        mWebView.setWebViewClient(new WebViewClient() {
+        webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, @NonNull String url) {
+                Log.d("testtt", "override url loading " + url);
                 Uri uri = Uri.parse(url);
                 if (url.startsWith(Spotify.getInstance().getRedirectUri())) {
+                    Log.d("testtt", "starts with redirect uri " + url);
                     AuthenticationResponse response = AuthenticationResponse.fromUri(uri);
                     Spotify.getInstance().setAccessToken(response.getAccessToken());
-                    CurrentUser.getInstance().updateUserDataRx().subscribe(new Consumer<Object>() {
-                        @Override
-                        public void accept(@io.reactivex.annotations.NonNull Object object) throws Exception {
-                            finish();
-                        }
-                    });
+                    setResult(RESULT_OK);
+                    finish();
+                    return true;
                 }
 
                 return false;
             }
+
         });
 
         String url = new Uri.Builder()
@@ -67,6 +67,12 @@ public class AuthActivity extends Activity {
                 .appendQueryParameter("show_dialog", "false")
                 .build().toString();
 
-        mWebView.loadUrl(url);
+        webView.loadUrl(url);
+    }
+
+    @Override
+    public void onBackPressed() {
+        setResult(RESULT_CANCELED);
+        finish();
     }
 }

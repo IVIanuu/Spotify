@@ -33,18 +33,11 @@ public class SpotifyServiceBuilder {
             okHttpBuilder.addInterceptor(loggingInterceptor);
         }
 
-        SpotifyInterceptor spotifyInterceptor = new SpotifyInterceptor();
-        okHttpBuilder.addInterceptor(spotifyInterceptor);
-
-        OkHttpClient client = okHttpBuilder.build();
-
-        spotifyInterceptor.setClient(client);
-
         Retrofit restAdapter = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(DynamicCallAdapterFactory.create())
-                .client(client)
+                .client(okHttpBuilder.build())
                 .build();
 
         return restAdapter.create(SpotifyService.class);

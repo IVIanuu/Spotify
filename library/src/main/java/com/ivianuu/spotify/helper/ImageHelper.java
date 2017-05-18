@@ -35,18 +35,10 @@ public class ImageHelper {
             return getImageInternal(((PlaylistTrack) object).track.album.images, size);
         } else if (object instanceof Artist) {
             return getImageInternal(((Artist) object).images, size);
-        } else if (object instanceof Album) {
-            return getImageInternal(((Album) object).images, size);
         } else if (object instanceof AlbumSimple) {
             return getImageInternal(((AlbumSimple) object).images, size);
-        } else if (object instanceof Playlist) {
-            return getImageInternal(((Playlist) object).images, size);
-        } else if (object instanceof PlaylistSimple) {
-            return getImageInternal(((PlaylistSimple) object).images, size);
         } else if (object instanceof PlaylistBase) {
             return getImageInternal(((PlaylistBase) object).images, size);
-        } else if (object instanceof UserPrivate) {
-            return getImageInternal(((UserPrivate) object).images, size);
         } else if (object instanceof UserPublic) {
             return getImageInternal(((UserPublic) object).images, size);
         } else if (object instanceof Category) {

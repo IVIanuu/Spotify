@@ -30,9 +30,9 @@ public class AutoRefreshTokenReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(@NonNull final Context context, Intent intent) {
-        if (!CurrentUser.getInstance().isLoggedIn()) return;
+        if (!Spotify.getInstance().getCurrentUser().isLoggedIn()) return;
 
         Spotify.getInstance().refreshToken();
-        CurrentUser.getInstance().updateUserDataRx().subscribe();
+        Spotify.getInstance().getCurrentUser().updateUserDataRx().subscribe();
     }
 }

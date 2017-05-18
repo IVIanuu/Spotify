@@ -26,6 +26,8 @@ public class Spotify {
     private static Spotify sInstance;
 
     private SpotifyService mApi;
+    private CurrentUser mUser;
+
     private PreferenceHelper mPreferenceHelper;
 
     private List<ApiStateChangedListener> mApiStateChangedListeners = new ArrayList<>();
@@ -39,6 +41,7 @@ public class Spotify {
     }
 
     private Spotify() {
+        mUser = new CurrentUser();
         mPreferenceHelper = PreferenceHelper.getInstance();
         refreshToken();
         updateApi();
@@ -68,6 +71,10 @@ public class Spotify {
     public SpotifyService getApi() {
         if (!isApiReady()) refreshToken();
         return mApi;
+    }
+
+    public CurrentUser getCurrentUser() {
+        return mUser;
     }
 
     private void updateApi() {

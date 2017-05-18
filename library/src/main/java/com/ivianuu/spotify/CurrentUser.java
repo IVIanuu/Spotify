@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.webkit.CookieManager;
 import android.webkit.ValueCallback;
 
@@ -26,8 +27,6 @@ import static com.ivianuu.spotify.ContextHolder.getContext;
 
 public class CurrentUser {
 
-    private static CurrentUser sInstance;
-
     private UserPrivate mUser;
 
     private boolean mIsUpdatingUserData;
@@ -38,22 +37,11 @@ public class CurrentUser {
 
     private List<UserInfoChangedListener> mUserInfoChangedListeners = new ArrayList<>();
 
-    private CurrentUser() {
+    CurrentUser() {
         mPreferenceHelper = PreferenceHelper.getInstance();
         mGson = new Gson();
         mUser = mGson.fromJson(mPreferenceHelper.getCurrentUser(), UserPrivate.class);
         updateUserDataRx().subscribe();
-    }
-
-    public static synchronized CurrentUser getInstance() {
-        CurrentUser currentUser;
-        synchronized (CurrentUser.class) {
-            if (sInstance == null) {
-                sInstance = new CurrentUser();
-            }
-            currentUser = sInstance;
-        }
-        return currentUser;
     }
 
     public Observable<Object> updateUserDataRx() {
@@ -68,6 +56,7 @@ public class CurrentUser {
 
     private void updateUserData() {
         if (mIsUpdatingUserData) return;
+
         mIsUpdatingUserData = true;
 
         mUser = Spotify.getInstance().getApi().getMe().get();
@@ -96,6 +85,7 @@ public class CurrentUser {
     }
 
     public void login(Activity activity, int requestCode) {
+        Log.d("my tag", "start login");
         Intent intent = new Intent(getContext(), AuthActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         activity.startActivityForResult(intent, requestCode);
@@ -117,9 +107,8 @@ public class CurrentUser {
     }
 
     public boolean isLoggedIn() {
-        if (Spotify.getInstance().getAccessToken() == null) return false;
-        if (Spotify.getInstance().getAccessToken().isEmpty()) return false;
-        return true;
+        return !(Spotify.getInstance().getAccessToken() == null
+                || Spotify.getInstance().getAccessToken().isEmpty());
     }
 
     public UserPrivate getUser() {

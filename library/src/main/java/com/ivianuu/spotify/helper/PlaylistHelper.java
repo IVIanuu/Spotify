@@ -43,7 +43,7 @@ public class PlaylistHelper {
     public static Playlist createPlaylist(String name) throws IOException {
         return Spotify.getInstance()
                 .getApi()
-                .createPlaylist(CurrentUser.getInstance().getUserId(), new OptionsBuilder().withName(name).build())
+                .createPlaylist(Spotify.getInstance().getCurrentUser().getUserId(), new OptionsBuilder().withName(name).build())
                 .get();
     }
 

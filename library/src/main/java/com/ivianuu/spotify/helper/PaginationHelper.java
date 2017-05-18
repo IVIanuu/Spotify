@@ -19,7 +19,6 @@ public class PaginationHelper<T> {
     private int mMax;
 
     private List<T> mItems = new ArrayList<>();
-
     private List<T> mLastReceivedItems = new ArrayList<>();
 
     private boolean mFirstItemsLoaded = false;
